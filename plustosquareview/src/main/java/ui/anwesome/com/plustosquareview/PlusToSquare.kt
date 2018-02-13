@@ -100,7 +100,7 @@ class PlusToSquareView(ctx:Context):View(ctx) {
             if(time == 0) {
                 val w = canvas.width.toFloat()
                 val h = canvas.height.toFloat()
-                plusToSquare = PlusToSquare(w/2,h/2,Math.min(w,h)/4)
+                plusToSquare = PlusToSquare(w/2,h/2,2*Math.min(w,h)/3)
             }
             canvas.drawColor(Color.parseColor("#212121"))
             plusToSquare?.draw(canvas, paint)
