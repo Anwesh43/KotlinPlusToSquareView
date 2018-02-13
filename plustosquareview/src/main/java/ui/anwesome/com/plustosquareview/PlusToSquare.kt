@@ -10,13 +10,14 @@ import android.view.*
 
 class PlusToSquareView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    val renderer = Renderer(this)
     override fun onDraw(canvas:Canvas) {
-
+        renderer.render(canvas, paint)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                renderer.handleTap()
             }
         }
         return true
@@ -89,6 +90,30 @@ class PlusToSquareView(ctx:Context):View(ctx) {
         }
         fun startUpdating(startcb : () -> Unit) {
             state.startUpdating(startcb)
+        }
+    }
+    data class Renderer(var view:PlusToSquareView, var time:Int = 0) {
+        val animator = Animator(view)
+        var plusToSquare:PlusToSquare ?= null
+        fun render(canvas:Canvas, paint:Paint) {
+            if(time == 0) {
+                val w = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
+                plusToSquare = PlusToSquare(w/2,h/2,Math.min(w,h)/4)
+            }
+            canvas.drawColor(Color.parseColor("#212121"))
+            plusToSquare?.draw(canvas, paint)
+            time++
+            animator.animate {
+                plusToSquare?.update {
+                    animator.stop()
+                }
+            }
+        }
+        fun handleTap() {
+            plusToSquare?.startUpdating {
+                animator.start()
+            }
         }
     }
 }
