@@ -12,8 +12,12 @@ import android.view.*
 class PlusToSquareView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = Renderer(this)
+    var plusToSquareListener:PlusToSquareListener?=null
     override fun onDraw(canvas:Canvas) {
         renderer.render(canvas, paint)
+    }
+    fun addPlusToSquareListener(onSquareListener:() -> Unit, onPlusListener: () -> Unit) {
+        plusToSquareListener = PlusToSquareListener(onSquareListener, onPlusListener)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
@@ -107,6 +111,10 @@ class PlusToSquareView(ctx:Context):View(ctx) {
             time++
             animator.animate {
                 plusToSquare?.update {
+                    when(it) {
+                        0f -> view.plusToSquareListener?.onPlusListener?.invoke()
+                        1f -> view.plusToSquareListener?.onSquareListener?.invoke()
+                    }
                     animator.stop()
                 }
             }
@@ -124,4 +132,5 @@ class PlusToSquareView(ctx:Context):View(ctx) {
             return view
         }
     }
+    data class PlusToSquareListener(var onSquareListener: () -> Unit, var onPlusListener : () -> Unit)
 }
