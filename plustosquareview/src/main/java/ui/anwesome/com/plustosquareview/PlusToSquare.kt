@@ -4,6 +4,7 @@ package ui.anwesome.com.plustosquareview
  * Created by anweshmishra on 14/02/18.
  */
 
+import android.app.Activity
 import android.content.*
 import android.graphics.*
 import android.view.*
@@ -114,6 +115,13 @@ class PlusToSquareView(ctx:Context):View(ctx) {
             plusToSquare?.startUpdating {
                 animator.start()
             }
+        }
+    }
+    companion object {
+        fun create(activity:Activity):PlusToSquareView {
+            val view = PlusToSquareView(activity)
+            activity.setContentView(view)
+            return view
         }
     }
 }
