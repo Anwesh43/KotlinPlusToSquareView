@@ -63,4 +63,32 @@ class PlusToSquareView(ctx:Context):View(ctx) {
             }
         }
     }
+    data class PlusToSquare(var x:Float, var y:Float, var size:Float) {
+        val state = State()
+        fun draw(canvas:Canvas, paint:Paint) {
+            paint.strokeWidth = size/20
+            paint.strokeCap = Paint.Cap.ROUND
+            paint.color = Color.parseColor("#d32f2f")
+            canvas.save()
+            canvas.translate(x,y)
+            for(i in 0..1) {
+                canvas.save()
+                canvas.rotate(90f * i)
+                for(j in 0..1) {
+                    val y_gap = (size/2) * state.scale
+                    canvas.save()
+                    canvas.drawLine(-size/2, y_gap * (j*2 - 1), size/2, y_gap * (j*2 - 1), paint)
+                    canvas.restore()
+                }
+                canvas.restore()
+            }
+            canvas.restore()
+        }
+        fun update(stopcb: (Float) -> Unit) {
+            state.update(stopcb)
+        }
+        fun startUpdating(startcb : () -> Unit) {
+            state.startUpdating(startcb)
+        }
+    }
 }
